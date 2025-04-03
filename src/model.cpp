@@ -584,14 +584,16 @@ void srdf::Model::loadCollisionPairs(const urdf::ModelInterface& urdf_model, XML
 
     CollisionPair pair{ boost::trim_copy(std::string(link1)), boost::trim_copy(std::string(link2)),
                         reason ? reason : "" };
-    if (!urdf_model.getLink(pair.link1_))
+    if (!urdf_model.getLink(pair.link1_) && pair.link1_ != "<octomap>")
     {
-      CONSOLE_BRIDGE_logWarn("Link '%s' is not known to URDF. Cannot disable/enable collisons.", link1);
+      CONSOLE_BRIDGE_logWarn("Link '%s' is not known to URDF and is not '<octomap>'. Cannot disable/enable collisions.",
+                             link1);
       continue;
     }
-    if (!urdf_model.getLink(pair.link2_))
+    if (!urdf_model.getLink(pair.link2_) && pair.link2_ != "<octomap>")
     {
-      CONSOLE_BRIDGE_logWarn("Link '%s' is not known to URDF. Cannot disable/enable collisons.", link2);
+      CONSOLE_BRIDGE_logWarn("Link '%s' is not known to URDF and is not '<octomap>'. Cannot disable/enable collisions.",
+                             link2);
       continue;
     }
     pairs.push_back(pair);
